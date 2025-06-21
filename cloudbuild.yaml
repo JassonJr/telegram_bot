@@ -10,3 +10,6 @@ steps:
   - --set-env-vars=TELEGRAM_BOT_TOKEN=${_TELEGRAM_BOT_TOKEN} # O token será injetado do gatilho
   - --allow-unauthenticated
   - --region=southamerica-east1 # A região onde sua Cloud Function será implantada
+
+  logsBucket: gs://telegram-bot-logs # ADICIONE ESTA LINHA AQUI!
+# Lembre-se de substituir NOME_DO_SEU_BUCKET_DE_LOGS pelo nome exato que você criou.
