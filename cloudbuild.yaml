@@ -6,7 +6,7 @@ steps:
   - telegram_webhook_handler # O nome da sua Cloud Function
   - --runtime=python311
   - --trigger-http
-  - --entry-point=telegram_webhook_handler
+  - --entry-point=telegram_webhook_entrypoint # <-- MUDANÇA AQUI: NOVO ENTRY POINT
   - --set-env-vars=TELEGRAM_BOT_TOKEN=${_TELEGRAM_BOT_TOKEN} # O token será injetado do gatilho
   - --allow-unauthenticated
   - --region=southamerica-east1 # A região onde sua Cloud Function será implantada

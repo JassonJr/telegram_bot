@@ -53,41 +53,29 @@ async def responder_mensagem(update: Update, context):
         await update.message.reply_text("Desculpe, não entendi. Tente de outra forma ou use uma das palavras-chave: 'olá', 'ajuda', 'preço', 'contato'.")
 
 
-# --- Configuração da Aplicação Flask para Webhook ---
+# --- Configuração da Aplicação Flask e python-telegram-bot ---
 app = Flask(__name__)
 
 # O objeto Application do python-telegram-bot é criado globalmente.
 application = Application.builder().token(TOKEN).build()
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_mensagem))
 
-
-# --- Função Principal para o Google Cloud Functions ---
-# O 'request' é necessário aqui porque o Google Cloud Functions (functions-framework)
-# o passa como argumento para o entry-point da função HTTP.
-@app.route('/', methods=['GET', 'POST'])
-async def telegram_webhook_handler(request): # <-- MUDANÇA AQUI: Adicionamos 'request' de volta
-    """Handles incoming Telegram webhook requests."""
-
-    if request.method == 'GET':
+# Este é o NOVO ponto de entrada para o Google Cloud Functions.
+# Usamos a função run_webhook do Application, que já sabe como lidar com o Flask.
+async def telegram_webhook_entrypoint(request):
+    """
+    Handles incoming Telegram webhook requests via Flask's request object.
+    This function acts as the entry point for Google Cloud Functions.
+    """
+    if request.method == "POST":
+        return await application.update_queue.put(Update.de_json(request.get_json(force=True), application.bot))
+    elif request.method == "GET":
+        # Retorna OK para requisições GET (usadas para configurar o webhook)
         logger.info("Received GET request. Returning OK for webhook setup.")
         return jsonify({"status": "ok", "message": "Webhook endpoint is live. Send POST requests for Telegram updates."}), 200
-
-    elif request.method == 'POST':
-        try:
-            req_json = request.get_json(silent=True)
-            if not req_json:
-                logger.error("No JSON payload received or invalid JSON for POST request.")
-                return jsonify({"status": "error", "message": "Invalid JSON"}), 400
-
-            bot = application.bot
-            update = Update.de_json(req_json, bot)
-            await application.process_update(update)
-
-            return jsonify({"status": "ok"}), 200
-
-        except Exception as e:
-            logger.exception(f"Error processing webhook POST request: {e}")
-            return jsonify({"status": "error", "message": str(e)}), 500
-
     else:
         return jsonify({"status": "error", "message": "Method not allowed"}), 405
+
+# Em ambientes de produção (como Cloud Functions), você não chama app.run().
+# O Flask é executado pelo functions-framework ou um servidor WSGI.
+# A função telegram_webhook_entrypoint será o "entry-point" do seu Cloud Function.
