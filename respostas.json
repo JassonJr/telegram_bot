@@ -56,8 +56,9 @@
     {"texto": "console de judeu"},
     {"texto": "vem pra caixa vc tbm"}
   ],
-  "pc,master race,linux,gpu": [
-    {"texto": "vida de pcista"}
+  "pc,master race,linux,gpu,não roda": [
+    {"texto": "vida de pcista"},
+    {"texto": "Nuss pobre pcistas"}
   ],
   "pincel,barbudo,cirno,touhou": [
     {"texto": "Começou a bajulação"},
