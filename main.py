@@ -16,21 +16,12 @@ if not TOKEN:
 
 # Dicionário de respostas baseado em palavras-chave
 respostas_automatica = {
-    "pc": "Vida de pcista",
-    "jogo": "zoomer",
-    "ps": "console de judeu",
-    "playstation": "console de judeu",
-    "pincel": "Começou a bajulação",
-    "traveco": "amo todos",
-    "ocidente": "acabou, judeu venceu",
-    "xbox": "só sentar, deitar, jogar e dormir",
-    "gamepass": "faz o x",
-    "sentiu": "zoomer momento",
-    "doutor": "zoomer",
-    "goty": "bridget",
-    "judeu": "👃🏻",
-    "bridget": "é um homi",
-    # Adicione mais pares de perguntas e respostas
+    "olá": "Olá! Como posso ajudar?",
+    "oi": "Oi! No que posso ser útil?",
+    "ajuda": "Estou aqui para ajudar! Qual sua dúvida?",
+    "preço": "Para informações sobre preços, por favor, visite nosso site.",
+    "contato": "Você pode nos contatar pelo email ou telefone que estão em nosso perfil.",
+    # Adicione mais palavras-chave e suas respostas aqui
 }
 
 # --- Funções do Bot ---
@@ -59,8 +50,7 @@ async def responder_mensagem(update: Update, context):
             break
 
     if not resposta_encontrada:
-        #await update.message.reply_text("Desculpe, não entendi. Tente de outra forma ou use uma das palavras-chave: 'olá', 'ajuda', 'preço', 'contato'.")
-        pass #pula caso não encontre resposta
+        await update.message.reply_text("Desculpe, não entendi. Tente de outra forma ou use uma das palavras-chave: 'olá', 'ajuda', 'preço', 'contato'.")
 
 
 # --- Configuração da Aplicação Flask para Webhook ---
@@ -72,26 +62,23 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responde
 
 
 # --- Função Principal para o Google Cloud Functions ---
-# Esta função será acionada por requisições HTTP (GET para setWebhook, POST para updates)
+# O 'request' é necessário aqui porque o Google Cloud Functions (functions-framework)
+# o passa como argumento para o entry-point da função HTTP.
 @app.route('/', methods=['GET', 'POST'])
-async def telegram_webhook_handler():
+async def telegram_webhook_handler(request): # <-- MUDANÇA AQUI: Adicionamos 'request' de volta
     """Handles incoming Telegram webhook requests."""
 
     if request.method == 'GET':
-        # Esta é a requisição que você faz no navegador para configurar o webhook.
-        # A função process_update *não* deve ser chamada para GET.
         logger.info("Received GET request. Returning OK for webhook setup.")
         return jsonify({"status": "ok", "message": "Webhook endpoint is live. Send POST requests for Telegram updates."}), 200
 
     elif request.method == 'POST':
-        # Esta é a requisição real do Telegram com as atualizações do bot.
         try:
             req_json = request.get_json(silent=True)
             if not req_json:
                 logger.error("No JSON payload received or invalid JSON for POST request.")
                 return jsonify({"status": "error", "message": "Invalid JSON"}), 400
 
-            # Usamos 'get_bot()' para obter o bot instance dentro do contexto da requisição.
             bot = application.bot
             update = Update.de_json(req_json, bot)
             await application.process_update(update)
@@ -101,3 +88,6 @@ async def telegram_webhook_handler():
         except Exception as e:
             logger.exception(f"Error processing webhook POST request: {e}")
             return jsonify({"status": "error", "message": str(e)}), 500
+
+    else:
+        return jsonify({"status": "error", "message": "Method not allowed"}), 405
