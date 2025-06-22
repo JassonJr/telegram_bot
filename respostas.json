@@ -52,7 +52,7 @@
     {"texto": "#FAZOX"},
     {"texto": "só sentar, deitar, jogar e dormir"}
   ],
-  "ps,playstation": [
+  "ps5,playstation": [
     {"texto": "console de judeu"},
     {"texto": "vem pra caixa vc tbm"}
   ],
@@ -70,5 +70,10 @@
   "nintendo,switch": [
     {"texto": "o judeu teme o samurai ne"},
     {"foto": "./media/img/xbox-nintendo.jpg"}
+  ],
+  "bom dia, good morning": [
+    {"texto": "bom dia só pra quem é judeu"},
+    {"foto": "./media/img/bridget_1.jpg", "texto":"torava"},
+    {"foto": "./media/img/bridget_2.jpg", "texto":"bom dia 😌"}
   ]
 }
