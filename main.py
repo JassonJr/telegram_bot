@@ -5,7 +5,6 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters
 
 # --- Configuração de Log ---
-# Essencial para depuração no Cloud Functions
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -19,7 +18,6 @@ if not TOKEN:
     raise ValueError("TELEGRAM_BOT_TOKEN environment variable not set.")
 
 # --- Lógica do Bot ---
-# Dicionário de respostas baseado em palavras-chave
 respostas_automatica = {
     "olá": "Olá! Como posso ajudar?",
     "oi": "Oi! No que posso ser útil?",
@@ -52,10 +50,8 @@ async def responder_mensagem(update: Update, context):
         await update.message.reply_text("Desculpe, não entendi. Tente de outra forma ou use uma das palavras-chave: 'olá', 'ajuda', 'preço', 'contato'.")
         logger.info(f"Nenhuma palavra-chave encontrada. Enviada resposta padrão para {user_info}.")
 
-
 # --- Inicialização da Aplicação PTB ---
-# É importante instanciar a aplicação fora do handler para reutilização
-# entre invocações da Cloud Function (otimização de "cold start").
+# A aplicação é construída aqui, mas será inicializada em cada requisição.
 application = Application.builder().token(TOKEN).build()
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_mensagem))
 
@@ -64,31 +60,35 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responde
 def telegram_webhook_entrypoint(request):
     """
     Entrypoint HTTP síncrono que o GCF irá chamar.
-    Esta função faz a "ponte" para o código assíncrono.
     """
     logger.info("Entrypoint da função foi acionado.")
-    
-    # MUDANÇA CRÍTICA 1: Usar asyncio.run() para executar a função async
-    # de dentro do nosso entrypoint síncrono.
+    # Executa a rotina async e aguarda sua conclusão.
     asyncio.run(main_async(request))
-    
-    # MUDANÇA CRÍTICA 2: Retornar uma resposta HTTP 200 OK para o Telegram.
-    # Isso confirma o recebimento do webhook. Se não fizermos isso, o Telegram
-    # continuará reenviando a mesma atualização, causando execuções repetidas.
+    # Retorna uma resposta 200 OK para o Telegram.
     return 'OK', 200
 
 async def main_async(request):
-    """Função assíncrona que processa a requisição do webhook."""
+    """
+    Função assíncrona que inicializa, processa e desliga a aplicação para cada requisição.
+    """
     try:
+        # NOVO: Inicializa a aplicação. Essencial para o PTB v20+.
+        await application.initialize()
+
         # Pega o corpo da requisição JSON
         json_data = request.get_json(force=True)
         logger.info(f"Request JSON data: {json_data}")
-        
+
         # Cria um objeto Update a partir do JSON recebido
         update = Update.de_json(json_data, application.bot)
-        
-        # Processa o update. Isso irá disparar o 'responder_mensagem' se o filtro corresponder.
+
+        # Processa o update. Isso irá disparar o 'responder_mensagem'.
         await application.process_update(update)
-        
+
     except Exception as e:
-        logger.error(f"Erro ao processar a requisição: {e}")
+        # Adicionado exc_info=True para logar o traceback completo no Cloud Logging.
+        logger.error(f"Erro no processamento assíncrono: {e}", exc_info=True)
+    
+    finally:
+        # NOVO: Garante que os recursos da aplicação (ex: conexões http) sejam liberados.
+        await application.shutdown()
