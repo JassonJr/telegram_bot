@@ -38,6 +38,10 @@
     {"gif": "./media/gif/its_over.gif"},
     {"texto": "acabou, judeu venceu"}
   ],
+  "zoomer": [
+    {"texto": "sentiu"},
+    {"texto": "projetou"}
+  ],
   "sentiu,jogo,joga": [
     {"texto": "como dizem os zoomers: cringe"},
     {"texto": "zoomer momento"},
