@@ -30,8 +30,8 @@
     {"foto": "./media/img/sexta.jpg"},
     {"foto": "./media/img/pizza.jpg"}
   ],
-  "yes,": [
-    {"texto": "amo todos"}
+  "yes, game, play": [
+    {"texto": "Welcome to the channel friend, plz come to brazil"}
   ],
   "acabou, ocidente": [
     {"gif": "./media/gif/its_over.gif"},
