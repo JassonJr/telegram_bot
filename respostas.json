@@ -45,6 +45,7 @@
   ],
   "xbox,gamepass,xiboca": [
     {"texto": "faz o x"},
+    {"texto": "#FAZOX"},
     {"texto": "só sentar, deitar, jogar e dormir"}
   ],
   "ps,playstation": [
@@ -54,7 +55,7 @@
   "pc,master race,linux,gpu": [
     {"texto": "vida de pcista"}
   ],
-  "pincel,barbudo": [
+  "pincel,barbudo,cirno,touhou": [
     {"texto": "Começou a bajulação"},
     {"foto": "./media/img/pincel_ia.jpg"}
   ],
