@@ -19,12 +19,23 @@ if not TOKEN:
 
 # --- Lógica do Bot ---
 respostas_automatica = {
-    "olá": "Olá! Como posso ajudar?",
-    "oi": "Oi! No que posso ser útil?",
-    "ajuda": "Estou aqui para ajudar! Qual sua dúvida?",
-    "preço": "Para informações sobre preços, por favor, visite nosso site.",
-    "contato": "Você pode nos contatar pelo email ou telefone que estão em nosso perfil.",
+    "pc": "Vida de pcista",
+    "jogo": "zoomer",
+    "ps": "console de judeu",
+    "playstation": "console de judeu",
+    "pincel": "Começou a bajulação",
+    "traveco": "amo todos",
+    "ocidente": "acabou, judeu venceu",
+    "xbox": "só sentar, deitar, jogar e dormir",
+    "gamepass": "faz o x",
+    "sentiu": "zoomer momento",
+    "doutor": "zoomer",
+    "goty": "bridget",
+    "judeu": "👃🏻",
+    "bridget": "é um homi",
+    # Adicione mais pares de perguntas e respostas
 }
+
 
 async def responder_mensagem(update: Update, context):
     """Lida com as mensagens recebidas e envia uma resposta."""
@@ -47,8 +58,9 @@ async def responder_mensagem(update: Update, context):
             break
 
     if not resposta_encontrada:
-        await update.message.reply_text("Desculpe, não entendi. Tente de outra forma ou use uma das palavras-chave: 'olá', 'ajuda', 'preço', 'contato'.")
-        logger.info(f"Nenhuma palavra-chave encontrada. Enviada resposta padrão para {user_info}.")
+        #await update.message.reply_text("Desculpe, não entendi. Tente de outra forma ou use uma das palavras-chave: 'olá', 'ajuda', 'preço', 'contato'.")
+        #logger.info(f"Nenhuma palavra-chave encontrada. Enviada resposta padrão para {user_info}.")
+        pass # Pula função caso não tenha resposta
 
 # --- Inicialização da Aplicação PTB ---
 # A aplicação é construída aqui, mas será inicializada em cada requisição.
