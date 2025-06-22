@@ -1,7 +1,5 @@
 import logging
 import os
-import asyncio # Importar asyncio
-from flask import Flask, request, jsonify
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters
 
@@ -54,49 +52,24 @@ async def responder_mensagem(update: Update, context):
         await update.message.reply_text("Desculpe, não entendi. Tente de outra forma ou use uma das palavras-chave: 'olá', 'ajuda', 'preço', 'contato'.")
 
 
-# --- Configuração da Aplicação Flask para Webhook ---
-# Criamos uma instância do Flask.
-app = Flask(__name__)
+# --- Configuração da Aplicação python-telegram-bot ---
+# A Application do python-telegram-bot será o coração do nosso webhook.
+# Não instanciamos Flask ou um router específico aqui.
 
-# O objeto Application do python-telegram-bot é criado globalmente.
 application = Application.builder().token(TOKEN).build()
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_mensagem))
 
 
 # --- Função Principal para o Google Cloud Functions ---
-# Esta função será acionada por requisições HTTP (GET para setWebhook, POST para updates)
-# O 'request' é necessário aqui porque o Google Cloud Functions (functions-framework)
-# o passa como argumento para o entry-point da função HTTP.
-@app.route('/', methods=['GET', 'POST'])
-def telegram_webhook_entrypoint(request): # <-- MUDANÇA CRÍTICA AQUI: AGORA É UMA FUNÇÃO SÍNCRONA
+# Este é o entry-point para o Google Cloud Function.
+# Ele recebe o objeto 'request' do functions-framework (que é um objeto Flask Request).
+async def telegram_webhook_entrypoint(request):
     """
-    Handles incoming Telegram webhook requests.
-    This function acts as the entry point for Google Cloud Functions.
+    Handles incoming Telegram webhook requests by passing the raw JSON update
+    directly to the python-telegram-bot Application.
     """
-    if request.method == 'GET':
-        logger.info("Received GET request. Returning OK for webhook setup.")
-        # Retorna uma resposta JSON válida para GET
-        return jsonify({"status": "ok", "message": "Webhook endpoint is live. Send POST requests for Telegram updates."}), 200
+    logger.info(f"Received {request.method} request to webhook endpoint.")
 
-    elif request.method == 'POST':
-        try:
-            req_json = request.get_json(silent=True)
-            if not req_json:
-                logger.error("No JSON payload received or invalid JSON for POST request.")
-                return jsonify({"status": "error", "message": "Invalid JSON"}), 400
-            
-            # --- MUDANÇA CRÍTICA AQUI ---
-            # Para executar código assíncrono dentro de uma função síncrona
-            # em um ambiente como o Cloud Functions, precisamos usar asyncio.run.
-            # Isso garante que a coroutine seja esperada e o resultado síncrono retornado.
-            asyncio.run(application.process_update(Update.de_json(req_json, application.bot)))
-            
-            # Retorna uma resposta de sucesso para o Telegram, que é esperada como síncrona
-            return jsonify({"status": "ok"}), 200
-
-        except Exception as e:
-            logger.exception(f"Error processing webhook POST request: {e}")
-            return jsonify({"status": "error", "message": str(e)}), 500
-    
-    else:
-        return jsonify({"status": "error", "message": "Method not allowed"}), 405
+    # O python-telegram-bot Application tem um método para processar requisições Flask
+    # de forma assíncrona. Ele lida com GET (para setWebhook) e POST (para updates).
+    return await application.process_webhook_requests(request)
