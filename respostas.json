@@ -40,7 +40,8 @@
   ],
   "sentiu,jogo,joga": [
     {"texto": "como dizem os zoomers: cringe"},
-    {"texto": "zoomer momento"}
+    {"texto": "zoomer momento"},
+    {"texto": "como vcs zoomers dizem, projetou"}
   ],
   "xbox,gamepass,xiboca": [
     {"texto": "faz o x"},
@@ -60,5 +61,9 @@
   "clair,expedition": [
     {"texto": "é que aí não é feito pelo judeu né"},
     {"foto": "./media/img/clair.jpg"}
+  ],
+  "nintendo,switch": [
+    {"texto": "o judeu teme o samurai ne"},
+    {"foto": "./media/img/xbox-nintendo.jpg"}
   ]
 }
