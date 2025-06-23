@@ -30,13 +30,17 @@
     {"foto": "./media/img/sexta.jpg"},
     {"foto": "./media/img/pizza.jpg"}
   ],
-  "yes,game,play,what": [
+  "yes,send,play,what,english,very,without": [
     {"texto": "Welcome to the channel friend, plz come to brazil"},
     {"texto": "Seja bem vindo ao canal amigo"}
   ],
   "acabou,ocidente": [
     {"gif": "./media/gif/its_over.gif"},
     {"texto": "acabou, judeu venceu"}
+  ],
+  "se passando por mim": [
+    {"texto": "acabou, judeu venceu"},
+    {"texto": "amigo, procure um canal do seu pais"}
   ],
   "zoomer": [
     {"texto": "sentiu"},
