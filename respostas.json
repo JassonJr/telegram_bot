@@ -23,6 +23,7 @@
     {"texto": "zoomer"},
     {"texto": "tudo é eu aqui"},
     {"texto": "tudo é o sono"},
+    {"texto": "Sou branco, 1.89, grande forte e tenho um xbox"},
     {"foto": "./media/img/motosserra.jpg"}
   ],
   "sexta": [
@@ -56,7 +57,7 @@
     {"texto": "#FAZOX"},
     {"texto": "só sentar, deitar, jogar e dormir"}
   ],
-  "ps5,playstation": [
+  "ps5,playstation,sony": [
     {"texto": "console de judeu"},
     {"texto": "vem pra caixa vc tbm"}
   ],
