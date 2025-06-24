@@ -2,8 +2,7 @@ import logging
 import os
 import asyncio
 import random
-import json  # NOVO: Importa a biblioteca para trabalhar com JSON
-
+import json
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters
 
@@ -20,46 +19,85 @@ if not TOKEN:
     logger.error("A variável de ambiente 'TELEGRAM_BOT_TOKEN' não está configurada.")
     raise ValueError("TELEGRAM_BOT_TOKEN environment variable not set.")
 
-# --- Lógica do Bot ---
-
-# ALTERADO: Carrega as respostas de um arquivo JSON externo.
+# --- Carregamento das Respostas ---
 def carregar_respostas():
     """Carrega as respostas do arquivo respostas.json."""
     try:
-        # 'encoding="utf-8"' é crucial para ler acentos e caracteres especiais.
         with open('respostas.json', 'r', encoding='utf-8') as f:
             return json.load(f)
-    except FileNotFoundError:
-        logger.error("Arquivo 'respostas.json' não encontrado! O bot não terá respostas.")
-        return {}
-    except json.JSONDecodeError:
-        logger.error("Erro ao decodificar 'respostas.json'! Verifique a sintaxe do arquivo.")
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Erro ao carregar 'respostas.json': {e}")
         return {}
 
-respostas_automatica = carregar_respostas()
+respostas_completas = carregar_respostas()
+respostas_por_palavra_chave = respostas_completas.get("respostas_por_palavra_chave", {})
+respostas_por_reply = respostas_completas.get("respostas_por_reply", {})
+# NOVO: Carrega a lista de respostas genéricas
+resposta_generica_para_reply = respostas_completas.get("resposta_generica_para_reply", [])
 
-# A função 'responder_mensagem' e todo o resto do código permanecem EXATAMENTE IGUAIS.
-# Isso mostra a beleza de separar os dados da lógica!
-# LÓGICA ATUALIZADA: Entende chaves agrupadas com vírgulas.
+
+# --- Lógica Principal do Bot ---
 async def responder_mensagem(update: Update, context):
-    """Lida com as mensagens recebidas, sorteia uma resposta e a envia."""
+    """Lida com as mensagens recebidas, com uma lógica de prioridade:
+    1. Reply Específico
+    2. Reply Genérico
+    3. Palavra-Chave
+    """
     if not update.message or not update.message.text:
         return
 
-    mensagem_recebida = update.message.text.lower()
+    mensagem_recebida_texto = update.message.text
     user_info = f"{update.effective_user.full_name} ({update.effective_user.id})"
-    logger.info(f"Mensagem de {user_info}: '{update.message.text}'")
 
-    resposta_encontrada = False
-    # A variável 'chaves_agrupadas' agora representa strings como "oi,olá"
-    for chaves_agrupadas, lista_de_opcoes in respostas_automatica.items():
-        
-        # Transforma a string "oi,olá" em uma lista de palavras ['oi', 'olá']
+    # --- LÓGICA DE REPLY (ESPECÍFICO E GENÉRICO) ---
+    if update.message.reply_to_message and update.message.reply_to_message.from_user.id == context.bot.id:
+        texto_original_bot = update.message.reply_to_message.text
+        logger.info(f"{user_info} respondeu à mensagem: '{texto_original_bot}'")
+
+        # 1. Tenta encontrar uma resposta específica
+        for texto_gatilho, lista_de_opcoes in respostas_por_reply.items():
+            if texto_gatilho.lower() in texto_original_bot.lower():
+                dados_resposta = random.choice(lista_de_opcoes)
+                
+                texto_resposta = dados_resposta.get("texto")
+                if texto_resposta and "{user_input}" in texto_resposta:
+                    texto_resposta = texto_resposta.replace("{user_input}", mensagem_recebida_texto)
+                
+                # Envia a resposta específica e encerra
+                try:
+                    if dados_resposta.get("sticker"):
+                        await update.message.reply_sticker(sticker=dados_resposta["sticker"])
+                    elif texto_resposta:
+                        await update.message.reply_text(texto_resposta, parse_mode='HTML')
+                    
+                    logger.info(f"Resposta de REPLY ESPECÍFICO enviada para {user_info}.")
+                    return
+                except Exception as e:
+                    logger.error(f"Falha ao enviar resposta de REPLY ESPECÍFICO: {e}", exc_info=True)
+                    return
+
+        # 2. Se não encontrou resposta específica, tenta a genérica
+        if resposta_generica_para_reply:
+            dados_resposta = random.choice(resposta_generica_para_reply)
+            try:
+                if dados_resposta.get("sticker"):
+                    await update.message.reply_sticker(sticker=dados_resposta["sticker"])
+                elif dados_resposta.get("texto"):
+                    await update.message.reply_text(dados_resposta["texto"], parse_mode='HTML')
+
+                logger.info(f"Resposta de REPLY GENÉRICO enviada para {user_info}.")
+                return
+            except Exception as e:
+                logger.error(f"Falha ao enviar resposta de REPLY GENÉRICO: {e}", exc_info=True)
+                return
+
+    # --- LÓGICA DE PALAVRA-CHAVE (só executa se não for um reply tratado acima) ---
+    logger.info(f"Mensagem de {user_info}: '{mensagem_recebida_texto}'")
+    mensagem_recebida_lower = mensagem_recebida_texto.lower()
+    
+    for chaves_agrupadas, lista_de_opcoes in respostas_por_palavra_chave.items():
         lista_palavras_chave = chaves_agrupadas.split(',')
-        
-        # Verifica se ALGUMA das palavras da lista está na mensagem do usuário
-        if any(palavra in mensagem_recebida for palavra in lista_palavras_chave):
-            
+        if any(palavra in mensagem_recebida_lower for palavra in lista_palavras_chave):
             dados_resposta = random.choice(lista_de_opcoes)
             
             texto_resposta = dados_resposta.get("texto")
@@ -71,24 +109,20 @@ async def responder_mensagem(update: Update, context):
 
             try:
                 if sticker_resposta: await update.message.reply_sticker(sticker=sticker_resposta)
-                elif gif_resposta: await update.message.reply_animation(animation=gif_resposta, caption=texto_resposta)
-                elif foto_resposta: await update.message.reply_photo(photo=foto_resposta, caption=texto_resposta)
-                elif audio_resposta: await update.message.reply_audio(audio=audio_resposta, caption=texto_resposta)
-                elif voz_resposta: await update.message.reply_voice(voice=voz_resposta, caption=texto_resposta)
-                elif texto_resposta: await update.message.reply_text(texto_resposta)
+                elif gif_resposta: await update.message.reply_animation(animation=gif_resposta, caption=texto_resposta, parse_mode='HTML')
+                elif foto_resposta: await update.message.reply_photo(photo=foto_resposta, caption=texto_resposta, parse_mode='HTML')
+                elif audio_resposta: await update.message.reply_audio(audio=audio_resposta, caption=texto_resposta, parse_mode='HTML')
+                elif voz_resposta: await update.message.reply_voice(voice=voz_resposta, caption=texto_resposta, parse_mode='HTML')
+                elif texto_resposta: await update.message.reply_text(texto_resposta, parse_mode='HTML')
+                
+                logger.info(f"Resposta de PALAVRA-CHAVE enviada para {user_info}.")
+                return
             except Exception as e:
-                logger.error(f"Falha ao enviar resposta para '{chaves_agrupadas}': {e}", exc_info=True)
+                logger.error(f"Falha ao enviar resposta de PALAVRA-CHAVE: {e}", exc_info=True)
+                return
+    pass
 
-            resposta_encontrada = True
-            break
-
-    if not resposta_encontrada:
-        # A mensagem padrão continua a mesma, pois o bot não precisa expor suas palavras-chave.
-        #await update.message.reply_text("Desculpe, não entendi o que você quis dizer.")
-        pass #pula caso não encontrar resposta
-
-
-# --- O restante do arquivo permanece O MESMO ---
+# --- O restante do arquivo (application, entrypoint, etc.) permanece O MESMO ---
 
 application = Application.builder().token(TOKEN).build()
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_mensagem))

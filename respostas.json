@@ -1,85 +1,99 @@
 {
-  "judeu,j0d3u,(((eles))),jews,pill do dia": [
-    {"texto": "é que eu não uso o judeu né, pago com dinheiro físico"},
-    {"texto": "Engraçado o judeu sempre retrarar a idade média assim, cinza e sombria e na real foi uma das épocas mais belas e coloridas da história, so que la judeu não se criava ne."},
-    {"texto": "👃🏻"},
-    {"sticker": "CAACAgQAAxkBAAE2qytoWBk5xuEGZep81TRpKlKvH0HSSQACSQEAAu3yKjCRDAwXP93udDYE"},
-    {"sticker": "CAACAgQAAxkBAAE2pDxoV34qR-CTMN4fN-G_P0vrEa1TvQAC2wEAAu3yKjBDNKVE-zEiDjYE"},
-    {"foto": "./media/img/judeu_ghibili.jpg"},
-    {"voz": "./media/ogg/oppenheimer.ogg"}
-  ],
-  "bridget": [
-    {"texto": "🍆"},
-    {"texto": "é um homi"},
-    {"audio": "./media/mp3/its-raining-men.mp3"}
-  ],
-  "traveco,veveco,traveko,tr4v3k0": [
-    {"foto": "./media/img/bridget_1.jpg"},
-    {"foto": "./media/img/bridget_2.jpg"},
-    {"texto": "amo todos"},
-    {"texto": "É que isso ai e complicado, é claro que a Bridget e a Giselle ai são binitinhas cute. O homem se atrai pela figura feminina por isso gosta ate de desenho de figura feminina, games e afins.\nO pessoal aqui tb acha isso mas nao fala.\nPorem tem pinto e isso é indiscutível. O kekao em geral nao teria um relacionamento por conta disso, e fora que essas trap que parece personagem de anime e raríssimo so tem em alguns lugares dos eua europa e asia pro ex, a pessoa ja tem que nascer meio com cara de menina mesmo, investir, ter genetica boa pra isso, se cuidar etc, as q sao assim sao famosas de Instagram da vida. Nenhum kekao iria conseguir algo de qualquer jeito.\n\nNo br entao, so tem traveko mesmo, pedreiro de peruca, a genética br e latina e mt grosseira, não tem como.\n\nEntão falando serio mesmo, mais valem vcs procurarem uma menina meia boca e investir. Afinal menina tem ppk e tem ku tb. E vc pode sair de mao dada por ai.\nFora q as true menininha se se cuidar vira uma milf boa da vida. Trap waifu de anime alem de raro, pende ao degeneração tem prazo de validade curtissimo.\n\n\nEntão meu conselho pra vcs é. Melhor investir em uma namoradinha comum meia boca e ser feliz."}
-  ],
-  "doutor,sleep,sono,@jumentodescbot": [
+  "respostas_por_palavra_chave": {
+    "judeu,j0d3u,(((eles))),jews,pill do dia": [
+      {"texto": "é que eu não uso o judeu né, pago com dinheiro físico"},
+      {"texto": "Engraçado o judeu sempre retrarar a idade média assim, cinza e sombria e na real foi uma das épocas mais belas e coloridas da história, so que la judeu não se criava ne."},
+      {"texto": "👃🏻"},
+      {"sticker": "CAACAgQAAxkBAAE2qytoWBk5xuEGZep81TRpKlKvH0HSSQACSQEAAu3yKjCRDAwXP93udDYE"},
+      {"sticker": "CAACAgQAAxkBAAE2pDxoV34qR-CTMN4fN-G_P0vrEa1TvQAC2wEAAu3yKjBDNKVE-zEiDjYE"},
+      {"foto": "./media/img/judeu_ghibili.jpg"},
+      {"voz": "./media/ogg/oppenheimer.ogg"}
+    ],
+    "bridget": [
+      {"texto": "🍆"},
+      {"texto": "é um homi"},
+      {"audio": "./media/mp3/its-raining-men.mp3"}
+    ],
+    "traveco,veveco,traveko,tr4v3k0": [
+      {"foto": "./media/img/bridget_1.jpg"},
+      {"foto": "./media/img/bridget_2.jpg"},
+      {"texto": "amo todos"},
+      {"texto": "É que isso ai e complicado, é claro que a Bridget e a Giselle ai são binitinhas cute. O homem se atrai pela figura feminina por isso gosta ate de desenho de figura feminina, games e afins.\nO pessoal aqui tb acha isso mas nao fala.\nPorem tem pinto e isso é indiscutível. O kekao em geral nao teria um relacionamento por conta disso, e fora que essas trap que parece personagem de anime e raríssimo so tem em alguns lugares dos eua europa e asia pro ex, a pessoa ja tem que nascer meio com cara de menina mesmo, investir, ter genetica boa pra isso, se cuidar etc, as q sao assim sao famosas de Instagram da vida. Nenhum kekao iria conseguir algo de qualquer jeito.\n\nNo br entao, so tem traveko mesmo, pedreiro de peruca, a genética br e latina e mt grosseira, não tem como.\n\nEntão falando serio mesmo, mais valem vcs procurarem uma menina meia boca e investir. Afinal menina tem ppk e tem ku tb. E vc pode sair de mao dada por ai.\nFora q as true menininha se se cuidar vira uma milf boa da vida. Trap waifu de anime alem de raro, pende ao degeneração tem prazo de validade curtissimo.\n\n\nEntão meu conselho pra vcs é. Melhor investir em uma namoradinha comum meia boca e ser feliz."}
+    ],
+    "doutor,sleep,sono,@jumentodescbot": [
+      {"texto": "zoomer"},
+      {"texto": "tudo é eu aqui"},
+      {"texto": "tudo é o sono"},
+      {"texto": "Sou branco, 1.89, grande forte e tenho um xbox"},
+      {"foto": "./media/img/motosserra.jpg"}
+    ],
+    "sexta": [
+      {"foto": "./media/img/calice.jpg"},
+      {"foto": "./media/img/sexta.jpg"},
+      {"foto": "./media/img/pizza.jpg"}
+    ],
+    "acabou,ocidente": [
+      {"gif": "./media/gif/its_over.gif"},
+      {"texto": "acabou, judeu venceu"}
+    ],
+    "se passando por mim": [
+      {"texto": "acabou, judeu venceu"},
+      {"texto": "amigo, procure um canal do seu pais"}
+    ],
+    "zoomer": [
+      {"texto": "sentiu"},
+      {"texto": "projetou"}
+    ],
+    "sentiu,jogo,joga": [
+      {"texto": "como dizem os zoomers: cringe"},
+      {"texto": "zoomer momento"},
+      {"texto": "como vcs zoomers dizem, projetou"}
+    ],
+    "xbox,gamepass,xiboca": [
+      {"texto": "faz o x"},
+      {"texto": "#FAZOX"},
+      {"texto": "só sentar, deitar, jogar e dormir"}
+    ],
+    "ps5,playstation,sony": [
+      {"texto": "console de judeu"},
+      {"sticker": "CAACAgQAAxkBAAE2pDxoV34qR-CTMN4fN-G_P0vrEa1TvQAC2wEAAu3yKjBDNKVE-zEiDjYE"},
+      {"texto": "vem pra caixa vc tbm"}
+    ],
+    "pc,master race,linux,gpu,não roda,rx 580,kit xeon": [
+      {"texto": "vida de pcista"},
+      {"texto": "Nuss pobre pcistas"}
+    ],
+    "pincel,barbudo,cirno,touhou": [
+      {"texto": "Começou a bajulação"},
+      {"foto": "./media/img/pincel_ia.jpg"}
+    ],
+    "clair,expedition": [
+      {"texto": "é que aí não é feito pelo judeu né"},
+      {"foto": "./media/img/clair.jpg"}
+    ],
+    "nintendo,switch": [
+      {"texto": "o judeu teme o samurai ne"},
+      {"foto": "./media/img/xbox-nintendo.jpg"}
+    ],
+    "bom dia,good morning": [
+      {"texto": "bom dia só pra quem é judeu"},
+      {"foto": "./media/img/bridget_1.jpg", "texto": "torava"},
+      {"texto": "<b>Bom dia!</b> Para que eu possa te conhecer melhor, qual o seu nome?"}
+    ]
+  },
+  "respostas_por_reply": {
+    "qual o seu nome?": [
+      {
+        "texto": "<b>{user_input}</b>, que nome bonito! Prazer em te conhecer! 😊"
+      },
+      {
+        "texto": "Entendi, seu nome é <b>{user_input}</b>. Nome de quem joga no PC."
+      }
+    ]
+  },
+  "resposta_generica_para_reply": [
     {"texto": "zoomer"},
-    {"texto": "tudo é eu aqui"},
-    {"texto": "tudo é o sono"},
-    {"texto": "Sou branco, 1.89, grande forte e tenho um xbox"},
-    {"foto": "./media/img/motosserra.jpg"}
-  ],
-  "sexta": [
-    {"foto": "./media/img/calice.jpg"},
-    {"foto": "./media/img/sexta.jpg"},
-    {"foto": "./media/img/pizza.jpg"}
-  ],
-  "yes,send,play,what,english,very,without": [
-    {"texto": "Welcome to the channel friend, plz come to brazil"},
-    {"texto": "Seja bem vindo ao canal amigo"}
-  ],
-  "acabou,ocidente": [
-    {"gif": "./media/gif/its_over.gif"},
-    {"texto": "acabou, judeu venceu"}
-  ],
-  "se passando por mim": [
-    {"texto": "acabou, judeu venceu"},
-    {"texto": "amigo, procure um canal do seu pais"}
-  ],
-  "zoomer": [
     {"texto": "sentiu"},
-    {"texto": "projetou"}
-  ],
-  "sentiu,jogo,joga": [
-    {"texto": "como dizem os zoomers: cringe"},
-    {"texto": "zoomer momento"},
-    {"texto": "como vcs zoomers dizem, projetou"}
-  ],
-  "xbox,gamepass,xiboca": [
-    {"texto": "faz o x"},
-    {"texto": "#FAZOX"},
-    {"texto": "só sentar, deitar, jogar e dormir"}
-  ],
-  "ps5,playstation,sony": [
-    {"texto": "console de judeu"},
-    {"texto": "vem pra caixa vc tbm"}
-  ],
-  "pc,master race,linux,gpu,não roda,rx 580,kit xeon": [
-    {"texto": "vida de pcista"},
-    {"texto": "Nuss pobre pcistas"}
-  ],
-  "pincel,barbudo,cirno,touhou": [
-    {"texto": "Começou a bajulação"},
-    {"foto": "./media/img/pincel_ia.jpg"}
-  ],
-  "clair,expedition": [
-    {"texto": "é que aí não é feito pelo judeu né"},
-    {"foto": "./media/img/clair.jpg"}
-  ],
-  "nintendo,switch": [
-    {"texto": "o judeu teme o samurai ne"},
-    {"foto": "./media/img/xbox-nintendo.jpg"}
-  ],
-  "bom dia, good morning": [
-    {"texto": "bom dia só pra quem é judeu"},
-    {"foto": "./media/img/bridget_1.jpg", "texto":"torava"},
-    {"foto": "./media/img/bridget_2.jpg", "texto":"bom dia 😌"}
+    {"sticker": "CAACAgQAAxkBAAE2pDxoV34qR-CTMN4fN-G_P0vrEa1TvQAC2wEAAu3yKjBDNKVE-zEiDjYE"}
   ]
 }
