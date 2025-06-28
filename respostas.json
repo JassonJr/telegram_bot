@@ -49,7 +49,7 @@
       {"sticker": "CAACAgEAAxkBAAE2u-9oWhHwQ68YtX4NKKoMI1a3t_ilAgACoQMAAj7BQEdzbOCVpVpNMjYE"},
       {"texto": "amigo, procure um canal do seu pais"}
     ],
-    "portuguese,english,monkey": [
+    "portuguese,english,monkey,america,that,fuck,lmao,arent,help,talk,please,having,guess,latinx": [
       {"texto": "acabou, judeu venceu"},
       {"sticker": "CAACAgEAAxkBAAE2u-9oWhHwQ68YtX4NKKoMI1a3t_ilAgACoQMAAj7BQEdzbOCVpVpNMjYE"},
       {"texto": "amigo, procure um canal do seu pais"}
@@ -64,7 +64,11 @@
       {"texto": "zoomer momento"},
       {"texto": "#FAZOX"},
       {"texto": "como vcs zoomers dizem, projetou"},
-      {"texto": "só sentar, deitar, jogar e dormir"}
+      {"texto": "só sentar, deitar, jogar e dormir"},
+      {"foto": "./media/img/bridget_1.jpg"},
+      {"foto": "./media/img/bridget_2.jpg"},
+      {"foto": "./media/img/clair.jpg"},
+      {"foto": "./media/img/xbox-nintendo.jpg"}
     ],
     "ps5,playstation,sony": [
       {"texto": "console de judeu"},
