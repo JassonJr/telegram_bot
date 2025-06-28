@@ -37,20 +37,22 @@ resposta_generica_para_reply = respostas_completas.get("resposta_generica_para_r
 
 
 # --- Lógica Principal do Bot ---
+# LÓGICA ATUALIZADA: Adiciona memória de curto prazo para evitar repetições
 async def responder_mensagem(update: Update, context):
-    """Lida com as mensagens recebidas, com uma lógica de prioridade:
-    1. Reply Específico
-    2. Reply Genérico
-    3. Palavra-Chave
+    """
+    Lida com as mensagens recebidas, com lógica anti-repetição.
+    A prioridade é: Reply Específico > Reply Genérico > Palavra-Chave com Memória.
     """
     if not update.message or not update.message.text:
         return
 
     mensagem_recebida_texto = update.message.text
     user_info = f"{update.effective_user.full_name} ({update.effective_user.id})"
-
-    # --- LÓGICA DE REPLY (ESPECÍFICO E GENÉRICO) ---
+    
+    # --- LÓGICA DE REPLY (permanece a mesma) ---
     if update.message.reply_to_message and update.message.reply_to_message.from_user.id == context.bot.id:
+        # ... (toda a sua lógica de reply específico e genérico continua aqui, sem alterações)
+        # Por uma questão de completude, estou colando ela aqui novamente.
         texto_original_bot = update.message.reply_to_message.text
         logger.info(f"{user_info} respondeu à mensagem: '{texto_original_bot}'")
 
@@ -63,7 +65,6 @@ async def responder_mensagem(update: Update, context):
                 if texto_resposta and "{user_input}" in texto_resposta:
                     texto_resposta = texto_resposta.replace("{user_input}", mensagem_recebida_texto)
                 
-                # Envia a resposta específica e encerra
                 try:
                     if dados_resposta.get("sticker"):
                         await update.message.reply_sticker(sticker=dados_resposta["sticker"])
@@ -91,23 +92,61 @@ async def responder_mensagem(update: Update, context):
                 logger.error(f"Falha ao enviar resposta de REPLY GENÉRICO: {e}", exc_info=True)
                 return
 
-    # --- LÓGICA DE PALAVRA-CHAVE (só executa se não for um reply tratado acima) ---
+    # --- LÓGICA DE PALAVRA-CHAVE COM MEMÓRIA ---
     logger.info(f"Mensagem de {user_info}: '{mensagem_recebida_texto}'")
     mensagem_recebida_lower = mensagem_recebida_texto.lower()
     
     for chaves_agrupadas, lista_de_opcoes in respostas_por_palavra_chave.items():
         lista_palavras_chave = chaves_agrupadas.split(',')
         if any(palavra in mensagem_recebida_lower for palavra in lista_palavras_chave):
-            dados_resposta = random.choice(lista_de_opcoes)
             
+            # --- INÍCIO DA NOVA LÓGICA ANTI-REPETIÇÃO ---
+
+            # Garante que o dicionário de memória exista para este chat
+            chat_data = context.chat_data
+            recent_responses = chat_data.setdefault('recent_responses', {})
+            
+            # Pega os índices das últimas respostas usadas para esta palavra-chave
+            last_used_indices = recent_responses.get(chaves_agrupadas, [])
+            
+            # Cria uma lista de opções disponíveis (cujo índice não está na memória recente)
+            opcoes_disponiveis = [
+                opcao for i, opcao in enumerate(lista_de_opcoes) if i not in last_used_indices
+            ]
+            
+            # Se todas as opções já foram usadas recentemente, reseta a memória e usa a lista completa
+            if not opcoes_disponiveis:
+                logger.info(f"Resetando memória para '{chaves_agrupadas}' no chat {update.effective_chat.id}")
+                last_used_indices = []
+                opcoes_disponiveis = lista_de_opcoes
+
+            # Escolhe aleatoriamente de uma das opções disponíveis ("frescas")
+            dados_resposta = random.choice(opcoes_disponiveis)
+            
+            # Encontra o índice original da resposta escolhida para guardar na memória
+            indice_escolhido = lista_de_opcoes.index(dados_resposta)
+            last_used_indices.append(indice_escolhido)
+            
+            # Limita o tamanho da memória. Vamos guardar até N-1 respostas, onde N é o total de opções.
+            # Isso garante que sempre haverá pelo menos uma opção "fresca".
+            num_total_opcoes = len(lista_de_opcoes)
+            max_memoria = max(0, num_total_opcoes - 1)
+            recent_responses[chaves_agrupadas] = last_used_indices[-max_memoria:]
+            
+            # --- FIM DA NOVA LÓGICA ANTI-REPETIÇÃO ---
+            
+            # A lógica de envio de mensagem permanece a mesma
             texto_resposta = dados_resposta.get("texto")
             sticker_resposta = dados_resposta.get("sticker")
-            gif_resposta = dados_resposta.get("gif")
-            foto_resposta = dados_resposta.get("foto")
-            audio_resposta = dados_resposta.get("audio")
-            voz_resposta = dados_resposta.get("voz")
-
+            # ... (e as outras mídias: gif, foto, audio, voz) ...
+            
             try:
+                # ... (seu bloco 'try/except' com os 'if/elif' para enviar a mídia continua aqui, sem alterações)
+                gif_resposta = dados_resposta.get("gif")
+                foto_resposta = dados_resposta.get("foto")
+                audio_resposta = dados_resposta.get("audio")
+                voz_resposta = dados_resposta.get("voz")
+
                 if sticker_resposta: await update.message.reply_sticker(sticker=sticker_resposta)
                 elif gif_resposta: await update.message.reply_animation(animation=gif_resposta, caption=texto_resposta, parse_mode='HTML')
                 elif foto_resposta: await update.message.reply_photo(photo=foto_resposta, caption=texto_resposta, parse_mode='HTML')
@@ -115,11 +154,12 @@ async def responder_mensagem(update: Update, context):
                 elif voz_resposta: await update.message.reply_voice(voice=voz_resposta, caption=texto_resposta, parse_mode='HTML')
                 elif texto_resposta: await update.message.reply_text(texto_resposta, parse_mode='HTML')
                 
-                logger.info(f"Resposta de PALAVRA-CHAVE enviada para {user_info}.")
+                logger.info(f"Resposta de PALAVRA-CHAVE (com memória) enviada para {user_info}.")
                 return
             except Exception as e:
                 logger.error(f"Falha ao enviar resposta de PALAVRA-CHAVE: {e}", exc_info=True)
                 return
+                
     pass
 
 # --- O restante do arquivo (application, entrypoint, etc.) permanece O MESMO ---
