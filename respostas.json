@@ -93,9 +93,9 @@
       {"texto": "o judeu teme o samurai ne"},
       {"foto": "./media/img/xbox-nintendo.jpg"}
     ],
-    "bom dia,morning,good morning,buenos dias": [
+    "bom dia, /v/": [
       {"texto": "bom dia só pra quem é judeu"},
-      {"foto": "./media/img/bridget_1.jpg", "texto": "torava"},
+      {"foto": "./media/img/bridget_1.jpg", "texto": "bom dia 😌"},
       {"foto": "./media/img/bridget_2.jpg", "texto": "bom dia 😌"}
     ]
   },

@@ -107,18 +107,37 @@ async def responder_mensagem(update: Update, context):
         logger.info(f"Cooldown ativo para mensagens gerais no chat {chat_id}. Ignorando.")
         return
 
-    # --- LÓGICA DE PALAVRA-CHAVE COM MEMÓRIA ---
-    # Esta seção só será alcançada se a mensagem não for um reply e não estiver em cooldown.
+    # --- LÓGICA DE PALAVRA-CHAVE (COM A MELHORIA) ---
     logger.info(f"Mensagem de {user_info}: '{mensagem_recebida_texto}'")
-    # ... (O restante da sua lógica de palavra-chave continua aqui, exatamente como antes,
-    # lembrando de atualizar o timestamp no final) ...
     mensagem_recebida_lower = mensagem_recebida_texto.lower()
+    
     for chaves_agrupadas, lista_de_opcoes in respostas_por_palavra_chave.items():
-        lista_palavras_chave = chaves_agrupadas.split(',')
-        if any(palavra in mensagem_recebida_lower for palavra in lista_palavras_chave):
+        
+        # --- INÍCIO DA NOVA LÓGICA DE VERIFICAÇÃO ---
+        
+        # 1. Primeiro, verifica se a frase completa (a chave exata do JSON) está na mensagem.
+        #    Isso permite que "bom dia, /v/!" funcione.
+        match_found = chaves_agrupadas.lower() in mensagem_recebida_lower
+        
+        # 2. Se não encontrou a frase completa, tenta a lógica antiga de palavras separadas.
+        if not match_found:
+            lista_palavras_chave = chaves_agrupadas.split(',')
+            # any() retorna True se qualquer item na lista for encontrado.
+            if any(palavra.strip().lower() in mensagem_recebida_lower for palavra in lista_palavras_chave if palavra.strip()):
+                match_found = True
+        
+        # --- FIM DA NOVA LÓGICA DE VERIFICAÇÃO ---
+
+        if match_found:
+            # Se encontrou uma correspondência (seja da frase completa ou de uma palavra),
+            # o resto do código continua exatamente como antes.
+            
             # ... (lógica anti-repetição)
             chat_data = context.chat_data
             recent_responses = chat_data.setdefault('recent_responses', {})
+            # ... (etc, todo o resto do seu código de escolher e enviar a resposta)
+
+            # Copiando o resto da lógica para ser completo:
             last_used_indices = recent_responses.get(chaves_agrupadas, [])
             opcoes_disponiveis = [
                 opcao for i, opcao in enumerate(lista_de_opcoes) if i not in last_used_indices
@@ -149,8 +168,8 @@ async def responder_mensagem(update: Update, context):
                 elif voz_resposta: await update.message.reply_voice(voice=voz_resposta, caption=texto_resposta, parse_mode='HTML')
                 elif texto_resposta: await update.message.reply_text(texto_resposta, parse_mode='HTML')
                 
-                context.chat_data['last_response_timestamp'] = now
-                logger.info(f"Resposta de PALAVRA-CHAVE enviada. Cooldown atualizado para o chat {chat_id}.")
+                context.chat_data['last_response_timestamp'] = datetime.now()
+                logger.info(f"Resposta de PALAVRA-CHAVE enviada. Cooldown atualizado.")
                 return
             except Exception as e:
                 logger.error(f"Falha ao enviar resposta de PALAVRA-CHAVE: {e}", exc_info=True)
