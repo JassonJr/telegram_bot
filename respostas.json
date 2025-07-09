@@ -12,7 +12,7 @@
     "atlus,persona 3, persona 5": [
       {"sticker": "CAACAgEAAxkBAAE2u_9oWhQDO1KjVu1aniSXUGWe4z9nBQACmg4AAvyLkUYg5NzYrwtwETYE"}
     ],
-    "traveco,veveco,traveko,tr4v3k0,travesti,femboy,f3mb0y,bridget": [
+    "traveco,veveco,traveko,tr4v3k0,travesti,femboy,f3mb0y,bridget,trans": [
       {"foto": "./media/img/bridget_1.jpg"},
       {"foto": "./media/img/bridget_2.jpg"},
       {"texto": "amo todos"},
@@ -93,7 +93,7 @@
       {"texto": "o judeu teme o samurai ne"},
       {"foto": "./media/img/xbox-nintendo.jpg"}
     ],
-    "bom dia,good morning,buenos dias": [
+    "bom dia,morning,good morning,buenos dias": [
       {"texto": "bom dia só pra quem é judeu"},
       {"foto": "./media/img/bridget_1.jpg", "texto": "torava"},
       {"foto": "./media/img/bridget_2.jpg", "texto": "bom dia 😌"}
