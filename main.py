@@ -42,52 +42,49 @@ resposta_generica_para_reply = respostas_completas.get("resposta_generica_para_r
 
 # --- Lógica Principal do Bot ---
 async def responder_mensagem(update: Update, context):
-    """Lida com as mensagens recebidas, aplicando um cooldown por chat."""
+    """
+    Lida com as mensagens recebidas, com uma nova prioridade:
+    1. Replies (ignora o cooldown)
+    2. Cooldown para mensagens gerais
+    3. Palavra-Chave com Memória
+    """
     if not update.message or not update.message.text:
         return
 
-    chat_id = update.effective_chat.id
-    user_info = f"{update.effective_user.full_name} ({update.effective_user.id})"
-    
-    # --- INÍCIO DA NOVA LÓGICA DE COOLDOWN ---
-    now = datetime.now()
-    last_response_time = context.chat_data.get('last_response_timestamp')
-
-    if last_response_time and (now - last_response_time) < timedelta(seconds=COOLDOWN_SECONDS):
-        logger.info(f"Cooldown ativo no chat {chat_id}. Ignorando mensagem de {user_info}.")
-        return # Para a execução da função se estiver em cooldown
-    # --- FIM DA NOVA LÓGICA DE COOLDOWN ---
-
+    now = datetime.now() # Pegamos o horário atual aqui para usar em todos os casos
     mensagem_recebida_texto = update.message.text
-    
-    # --- LÓGICA DE REPLY ---
+    user_info = f"{update.effective_user.full_name} ({update.effective_user.id})"
+    chat_id = update.effective_chat.id
+
+    # --- LÓGICA DE REPLY (AGORA VEM PRIMEIRO) ---
     if update.message.reply_to_message and update.message.reply_to_message.from_user.id == context.bot.id:
         texto_original_bot = update.message.reply_to_message.text
-        logger.info(f"{user_info} respondeu à mensagem: '{texto_original_bot}'")
+        logger.info(f"{user_info} respondeu à mensagem (cooldown ignorado): '{texto_original_bot}'")
 
         # 1. Tenta encontrar uma resposta específica
         for texto_gatilho, lista_de_opcoes in respostas_por_reply.items():
             if texto_gatilho.lower() in texto_original_bot.lower():
-                # ... (lógica para escolher e processar a resposta específica)
                 dados_resposta = random.choice(lista_de_opcoes)
+                
                 texto_resposta = dados_resposta.get("texto")
                 if texto_resposta and "{user_input}" in texto_resposta:
                     texto_resposta = texto_resposta.replace("{user_input}", mensagem_recebida_texto)
                 
                 try:
+                    # Envia a resposta específica e ATUALIZA o timestamp do cooldown
                     if dados_resposta.get("sticker"):
                         await update.message.reply_sticker(sticker=dados_resposta["sticker"])
                     elif texto_resposta:
                         await update.message.reply_text(texto_resposta, parse_mode='HTML')
                     
-                    context.chat_data['last_response_timestamp'] = now # ATUALIZA O HORÁRIO
+                    context.chat_data['last_response_timestamp'] = now
                     logger.info(f"Resposta de REPLY ESPECÍFICO enviada. Cooldown atualizado para o chat {chat_id}.")
                     return
                 except Exception as e:
                     logger.error(f"Falha ao enviar resposta de REPLY ESPECÍFICO: {e}", exc_info=True)
                     return
 
-        # 2. Se não encontrou resposta específica, tenta a genérica
+        # 2. Se não encontrou específica, tenta a genérica
         if resposta_generica_para_reply:
             dados_resposta = random.choice(resposta_generica_para_reply)
             try:
@@ -96,18 +93,26 @@ async def responder_mensagem(update: Update, context):
                 elif dados_resposta.get("texto"):
                     await update.message.reply_text(dados_resposta["texto"], parse_mode='HTML')
 
-                context.chat_data['last_response_timestamp'] = now # ATUALIZA O HORÁRIO
+                context.chat_data['last_response_timestamp'] = now
                 logger.info(f"Resposta de REPLY GENÉRICO enviada. Cooldown atualizado para o chat {chat_id}.")
                 return
             except Exception as e:
                 logger.error(f"Falha ao enviar resposta de REPLY GENÉRICO: {e}", exc_info=True)
                 return
 
+    # --- LÓGICA DE COOLDOWN (AGORA VEM DEPOIS DO REPLY) ---
+    # Esta seção só será alcançada se a mensagem não for um reply tratado acima.
+    last_response_time = context.chat_data.get('last_response_timestamp')
+    if last_response_time and (now - last_response_time) < timedelta(seconds=COOLDOWN_SECONDS):
+        logger.info(f"Cooldown ativo para mensagens gerais no chat {chat_id}. Ignorando.")
+        return
+
     # --- LÓGICA DE PALAVRA-CHAVE COM MEMÓRIA ---
-    # ... (toda a sua lógica de palavra-chave continua aqui, sem alterações, mas com uma adição)
+    # Esta seção só será alcançada se a mensagem não for um reply e não estiver em cooldown.
     logger.info(f"Mensagem de {user_info}: '{mensagem_recebida_texto}'")
+    # ... (O restante da sua lógica de palavra-chave continua aqui, exatamente como antes,
+    # lembrando de atualizar o timestamp no final) ...
     mensagem_recebida_lower = mensagem_recebida_texto.lower()
-    
     for chaves_agrupadas, lista_de_opcoes in respostas_por_palavra_chave.items():
         lista_palavras_chave = chaves_agrupadas.split(',')
         if any(palavra in mensagem_recebida_lower for palavra in lista_palavras_chave):
@@ -144,7 +149,7 @@ async def responder_mensagem(update: Update, context):
                 elif voz_resposta: await update.message.reply_voice(voice=voz_resposta, caption=texto_resposta, parse_mode='HTML')
                 elif texto_resposta: await update.message.reply_text(texto_resposta, parse_mode='HTML')
                 
-                context.chat_data['last_response_timestamp'] = now # ATUALIZA O HORÁRIO
+                context.chat_data['last_response_timestamp'] = now
                 logger.info(f"Resposta de PALAVRA-CHAVE enviada. Cooldown atualizado para o chat {chat_id}.")
                 return
             except Exception as e:
