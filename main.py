@@ -22,7 +22,7 @@ if not TOKEN:
     raise ValueError("TELEGRAM_BOT_TOKEN environment variable not set.")
 
 # --- NOVO: Definição do Cooldown ---
-COOLDOWN_SECONDS = 600  # O bot só responderá a uma mensagem a cada 10 segundos no mesmo chat
+COOLDOWN_SECONDS = 900  # O bot só responderá a uma mensagem a cada 15 minutos no mesmo chat
 
 # --- Carregamento das Respostas ---
 def carregar_respostas():
