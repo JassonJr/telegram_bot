@@ -15,6 +15,8 @@
     "traveco,veveco,traveko,tr4v3k0,travesti,femboy,f3mb0y,bridget,trans": [
       {"foto": "./media/img/bridget_1.jpg"},
       {"foto": "./media/img/bridget_2.jpg"},
+      {"foto": "./media/img/bridget_3.jpg"},
+      {"foto": "./media/img/astolfo.jpg"},
       {"texto": "amo todos"},
       {"texto": "🍆"},
       {"texto": "é um homi"},
@@ -51,27 +53,32 @@
     ],
     "portuguese,english,monkey,america,that,fuck,lmao,arent,help,talk,please,having,guess,kill,language,would,nothing,type": [
       {"texto": "acabou, judeu venceu"},
+      {"texto": "Na boa. Pq vcs nao encerram o canal? Ja teu o seu koopa troopa pra bobiças e jogos novel de loli e de estupro e suicídio.\nVocês claramente nao gostam de games. Para quer continuar com essa palhaçada aqui que no fim so tem gringo? Pergunta honesta. Nao tô provocando ou sendo rude nao."},
       {"sticker": "CAACAgEAAxkBAAE2u-9oWhHwQ68YtX4NKKoMI1a3t_ilAgACoQMAAj7BQEdzbOCVpVpNMjYE"},
       {"texto": "amigo, procure um canal do seu pais"}
     ],
     "zoomer": [
       {"texto": "sentiu"},
+      {"texto": "Enzo"},
       {"texto": "projetou"}
     ],
     "xbox,gamepass,xiboca,caixa,sentiu,jogo,joga": [
       {"texto": "faz o x"},
       {"texto": "como dizem os zoomers: cringe"},
       {"texto": "zoomer momento"},
+      {"texto": "E mt choradeira. Tenho pass e compro mt jogo.\nCabei de comprar sf6 complete"},
       {"texto": "#FAZOX"},
       {"texto": "como vcs zoomers dizem, projetou"},
       {"texto": "só sentar, deitar, jogar e dormir"},
       {"foto": "./media/img/bridget_1.jpg"},
       {"foto": "./media/img/bridget_2.jpg"},
+      {"foto": "./media/img/bridget_3.jpg"},
       {"foto": "./media/img/clair.jpg"},
       {"foto": "./media/img/xbox-nintendo.jpg"}
     ],
     "ps5,playstation,sony": [
       {"texto": "console de judeu"},
+      {"texto": "Ter ps5 e status pra eles mesmo que nem liguem ele"},
       {"sticker": "CAACAgQAAxkBAAE2pDxoV34qR-CTMN4fN-G_P0vrEa1TvQAC2wEAAu3yKjBDNKVE-zEiDjYE"},
       {"texto": "vem pra caixa vc tbm"}
     ],
@@ -86,17 +93,22 @@
       {"foto": "./media/img/pincel_ia.jpg"}
     ],
     "clair,expedition": [
-      {"texto": "é que aí não é feito pelo judeu né"},
-      {"foto": "./media/img/clair.jpg"}
+      {"texto": "é que aí não é feito pelo judeu né"}
     ],
     "nintendo,switch": [
       {"texto": "o judeu teme o samurai ne"},
-      {"foto": "./media/img/xbox-nintendo.jpg"}
+      {"foto": "./media/img/xbox-nintendo.jpg"},
+      {"foto": "./media/img/godofor.jpg"}
+    ],
+    "paralelepipedo": [
+      {"gif": "CgACAgQAAxkBAAE3ekFobdhsAAHCOa03OnGYWJ170QfaymMAAmIHAAInFNxSuoxVVQlqLJ42BA"},
+      {"gif": "CgACAgQAAxkBAAE4-hpokWEC7W4m1MCreEVqbeqyZCGy0gACwQYAAuc_nVIUP9k63224HDYE"}
     ],
     "bom dia, /v/": [
       {"texto": "bom dia só pra quem é judeu"},
       {"foto": "./media/img/bridget_1.jpg", "texto": "bom dia 😌"},
-      {"foto": "./media/img/bridget_2.jpg", "texto": "bom dia 😌"}
+      {"foto": "./media/img/bridget_2.jpg", "texto": "bom dia 😌"},
+      {"foto": "./media/img/bridget_3.jpg", "texto": "bom dia 😌"}
     ]
   },
   "resposta_generica_para_reply": [
